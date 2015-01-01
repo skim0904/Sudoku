@@ -1,0 +1,71 @@
+body {
+	width: 100%;
+}
+
+.preset {
+	background-color: yellow;
+}
+
+.board-container {
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+}
+
+.board {
+	/*display: inline-block;*/
+	width: 100%;
+	border: 1px solid black;
+	display: table;
+}
+
+.board .board-row {
+	clear: both;
+	/*float: left;*/
+	width: 100%;
+	display: table-row;
+}
+
+.board .board-row .board-cell {
+	/*float: left;*/
+	position: relative;
+	width: 10%;
+	padding-bottom: 10%;
+	border: 1px solid black;
+	text-align: center;
+	display: table-cell;
+}
+
+.board .board-row .board-cell .cell-box {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	vertical-align: middle;
+}
+
+.board .board-row .board-cell .cell-box .cell-content-table {
+	display: table;
+	width: 100%;
+	height: 100%;
+}
+
+.board .board-row .board-cell .cell-box .cell-content-table .cell-content-table-cell {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.board-row:nth-child(1) .board-cell {
+	border-top-width: 3px;
+}
+
+.board-row:nth-child(3) .board-cell, .board-row:nth-child(6) .board-cell, .board-row:nth-child(9) .board-cell {
+	border-bottom-width: 3px;
+}
+
+.board-row .board-cell:nth-child(1) {
+	border-left-width: 3px;
+}
+
+.board-row .board-cell:nth-child(3), .board-row .board-cell:nth-child(6), .board-row .board-cell:nth-child(9) {
+	border-right-width: 3px;
+}
