@@ -1,5 +1,6 @@
 body {
 	width: 100%;
+	color: black;
 }
 
 .preset {
@@ -8,12 +9,17 @@ body {
 
 .selected {
 	background-color: blue;
+	color: white;
+}
+
+.wrong {
+	color: red;
 }
 
 .board-container {
 	margin-left: auto;
 	margin-right: auto;
-	width: 50%;
+	width: 30%;
 }
 
 .board {
@@ -58,19 +64,23 @@ body {
 	vertical-align: middle;
 }
 
-.board-row:nth-child(1) .board-cell {
+#board .board-row:nth-child(1) .board-cell {
 	border-top-width: 3px;
 }
 
-.board-row:nth-child(3) .board-cell, .board-row:nth-child(6) .board-cell, .board-row:nth-child(9) .board-cell {
+#board .board-row:nth-child(3) .board-cell,
+#board .board-row:nth-child(6) .board-cell,
+#board .board-row:nth-child(9) .board-cell {
 	border-bottom-width: 3px;
 }
 
-.board-row .board-cell:nth-child(1) {
+#board .board-row .board-cell:nth-child(1) {
 	border-left-width: 3px;
 }
 
-.board-row .board-cell:nth-child(3), .board-row .board-cell:nth-child(6), .board-row .board-cell:nth-child(9) {
+#board .board-row .board-cell:nth-child(3),
+#board .board-row .board-cell:nth-child(6),
+#board .board-row .board-cell:nth-child(9) {
 	border-right-width: 3px;
 }
 
@@ -78,5 +88,7 @@ a:not(.preset):hover {
 	background-color: red;
 }
 
-
+a.num:hover {
+	background-color: green;
+}
 

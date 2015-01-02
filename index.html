@@ -16,13 +16,18 @@
 			</div>
 		</div>
 
-    	<input type="button" onclick="exampleFunction()" value="example alert">
+		<div class="board-container">
+			<div id="number" class="board">
+			</div>
+		</div>
 
-		<script type="text/template" class="table">
+    	<input type="button" id="restartBtn" value="Restart">
+
+		<script type="text/template" class="sudokuBoard">
 
 			<% for (var row in rc.board) { %>
 				<div class="board-row">
-					<% for (col in rc.board[row]) { %>
+					<% for (var col in rc.board[row]) { %>
 						<a class="board-cell">
 							<div class="cell-box">
 								<div class="cell-content-table">
@@ -38,6 +43,22 @@
 				</div>
 			<% } %>
 
+		</script>
+
+		<script type="text/template" class="numberBoard">
+			<div class="board-row">
+				<% for (var i in rc.number) {%>
+					<a class="board-cell num">
+						<div class="cell-box">
+							<div class="cell-content-table">
+								<div class="cell-content-table-cell">
+									<%= rc.number[i] %>
+								</div>
+							</div>
+						</div>
+					</a>
+				<% } %>
+			</div>
 		</script>
 	</body>
 </html>
