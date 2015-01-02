@@ -6,6 +6,10 @@ body {
 	background-color: yellow;
 }
 
+.selected {
+	background-color: blue;
+}
+
 .board-container {
 	margin-left: auto;
 	margin-right: auto;

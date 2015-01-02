@@ -1,5 +1,6 @@
-var App = {
-	board: [
+
+var Sudoku = (function () {
+	var _board = [
 		[5,3,null,null,7,null,null,null,null],
 		[6,null,null,1,9,5,null,null,null],
 		[null,9,8,null,null,null,null,6,null],
@@ -9,8 +10,57 @@ var App = {
 		[null,6,null,null,null,null,2,8,null],
 		[null,null,null,4,1,9,null,null,5],
 		[null,null,null,null,8,null,null,7,9]
-	]
-};
+	];
+
+	var _startGame = function () {
+		_view.render();
+		_controller.bindEvents();
+	};
+
+	var _view = {
+		render: function () {
+			//render the board using underscore template
+			_.templateSettings.variable = "rc";
+
+		    var template = _.template(
+		        $( "script.table" ).html()
+		    );
+
+		    var templateData = {
+		    	board: _board
+		    };
+
+			$("#board").append(template(templateData));
+
+			//assign ids to each cell and add color to preset cells
+			$(".board-row").each(function (i) {
+				$(this).find("a.board-cell").each(function (j) {
+					var row = i+1;
+					var col = j+1;
+					$(this).attr("id", "cell" + row + col);
+
+					if (_board[i][j]) $(this).addClass("preset");
+				});
+			});
+		}
+	};
+
+	var _controller = {
+		bindEvents: function () {
+			//bind event for clicking cells to select
+			$('a.board-cell').click(function () {
+				if (!($(this).hasClass("preset"))) {
+					$("a.board-cell").removeClass("selected");
+					$(this).addClass("selected");
+				}
+			});
+		}
+	}
+
+	return {
+		startGame: _startGame
+	}
+})();
 
 // var solution = [
 // 	[5,3,4,6,7,8,9,1,2],
@@ -24,55 +74,7 @@ var App = {
 // 	[3,4,5,2,8,6,1,7,9]];
 
 
-// var cellModel = function () {
-// 	var cellValue = null;
-
-// 	var setCell = function (input) {
-// 		cellValue = input;
-// 	};
-
-// 	var eraseCell = function () {
-// 		cellValue = null;
-// 	};
-
-// 	var getCellValue = function () {
-// 		return cellValue;
-// 	};
-
-// 	return {
-// 		setCell: setCell,
-// 		eraseCell: eraseCell,
-// 		getCellValue: getCellValue
-// 	};
-// };
-
-var exampleFunction = function () {
-	alert("Hello World!");
-}
-
-
 $(function () {
-	_.templateSettings.variable = "rc";
-
-    var template = _.template(
-        $( "script.table" ).html()
-    );
-
-    var templateData = {
-    	board: App.board
-    };
-
-	$("#board").append(template(templateData));
-
-	$(".board-row").each(function (i) {
-		$(this).find('a.board-cell').each(function (j) {
-			var row = i+1;
-			var col = j+1;
-			$(this).attr("id", "cell" + row + col);
-
-			if (App.board[i][j]) $(this).addClass("preset");
-			else $(this).attr("onclick", "exampleFunction()");
-		});
-	});
+	Sudoku.startGame();
 });
 
