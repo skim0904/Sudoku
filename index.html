@@ -16,14 +16,14 @@
 			</div>
 		</div>
 
-    	<input type="button" onclick="changeName()" value="change name">
+    	<input type="button" onclick="exampleFunction()" value="example alert">
 
 		<script type="text/template" class="table">
 
 			<% for (var row in rc.board) { %>
 				<div class="board-row">
 					<% for (col in rc.board[row]) { %>
-						<span class="board-cell">
+						<a class="board-cell">
 							<div class="cell-box">
 								<div class="cell-content-table">
 									<div class="cell-content-table-cell">
@@ -33,7 +33,7 @@
 									</div>
 								</div>
 							</div>
-						</span>
+						</a>
 					<% } %>
 				</div>
 			<% } %>

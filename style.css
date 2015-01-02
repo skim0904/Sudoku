@@ -69,3 +69,10 @@ body {
 .board-row .board-cell:nth-child(3), .board-row .board-cell:nth-child(6), .board-row .board-cell:nth-child(9) {
 	border-right-width: 3px;
 }
+
+a:not(.preset):hover {
+	background-color: red;
+}
+
+
+

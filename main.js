@@ -46,6 +46,11 @@ var App = {
 // 	};
 // };
 
+var exampleFunction = function () {
+	alert("Hello World!");
+}
+
+
 $(function () {
 	_.templateSettings.variable = "rc";
 
@@ -58,8 +63,16 @@ $(function () {
     };
 
 	$("#board").append(template(templateData));
+
+	$(".board-row").each(function (i) {
+		$(this).find('a.board-cell').each(function (j) {
+			var row = i+1;
+			var col = j+1;
+			$(this).attr("id", "cell" + row + col);
+
+			if (App.board[i][j]) $(this).addClass("preset");
+			else $(this).attr("onclick", "exampleFunction()");
+		});
+	});
 });
-
-
-
 
