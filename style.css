@@ -19,7 +19,8 @@ body {
 .board-container {
 	margin-left: auto;
 	margin-right: auto;
-	width: 30%;
+	padding: 3% 0;
+	width: 50%;
 }
 
 .board {
