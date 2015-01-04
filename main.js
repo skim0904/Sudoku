@@ -20,6 +20,9 @@ var Sudoku = (function () {
 	var _currentRow = null;
 	var _currentCol = null;
 
+	var _wrongCell = [];
+	var _wrongCellCheckingMode = false;
+
 	var _startGame = function () {
 		//this.view.render();
 		_view.render();
@@ -174,8 +177,10 @@ var Sudoku = (function () {
 				}
 
 				//number
-				if (e.which >= 49 && e.which <= 57) {
-					var number = e.which-48;
+				if ((e.which >= 49 && e.which <= 57) || (e.which >= 97 && e.which <= 105)) {
+					var number;// = e.which-48;
+					if (e.which <= 57) number = e.which-48;
+					else number = e.which-96;
 					_controller.selectNumber($(this).find("#" + number));
 				}
 			});
@@ -185,66 +190,171 @@ var Sudoku = (function () {
 			$("a.board-cell").removeClass("selected");
 			element.addClass("selected");
 			_currentCell = "#" + element.attr("id");
-			_currentRow = _currentCell.charAt(_currentCell.length-2);
-			_currentCol = _currentCell.charAt(_currentCell.length-1);
+			_currentRow = parseInt(_currentCell.charAt(_currentCell.length-2));
+			_currentCol = parseInt(_currentCell.charAt(_currentCell.length-1));
 		},
 
 		selectNumber: function (element) {
 			$(_currentCell).removeClass("wrong");
+			_controller.removeFromWrongArray(_currentRow, _currentCol);
 			$(_currentCell + " .cell-content-table-cell").html(element.attr("id"));
 			_playing[_currentRow][_currentCol] = parseInt(element.attr("id"));
 
-			_validation.validate();
+			_validation.validate(_currentRow,_currentCol);
+		},
+
+		findIndexWrongArray: function (row, col) {
+			var index = -1;
+			_.find(_wrongCell, function (element, i) {
+				if (element.r === row && element.c === col) {
+					index = i;
+				}
+			});
+			return index;
+		},
+
+		addToWrongArray: function (row, col, type) {
+			var index = _controller.findIndexWrongArray(row,col);
+			if (index === -1) {
+				var object = {'r': row, 'c': col, 'wrongType': type};
+				_wrongCell.push(object);
+			}
+		},
+
+		removeFromWrongArray: function (row, col) {
+			var index = _controller.findIndexWrongArray(row,col);
+			if (index !== -1) {
+				_wrongCell.splice(index,1);
+			}
 		}
 	};
 
 	var _validation = {
-		validate: function () {
-			var squareRow = Math.floor(_currentRow/3);
-			var squareCol = Math.floor(_currentCol/3);
+		validate: function (row, col) {
+			var squareRow = Math.floor(row/3);
+			var squareCol = Math.floor(col/3);
 
-			_validation.checkRow(_currentRow);
-			_validation.checkCol(_currentCol);
-			_validation.checkSquare(squareRow, squareCol);
+			_validation.checkRow(row, col);
+			_validation.checkCol(row, col);
+			_validation.checkSquare(row, col, squareRow, squareCol);
+			_validation.checkWrongArray();
 			_validation.checkCompleted();
 		},
 
-		checkRow: function (row) {
+		checkRow: function (r, c) {
 			var visited = [false, false, false, false, false, false, false, false, false];
-			for (var col in _playing[row]) {
-				if (_playing[row][col]) {
-					if (visited[_playing[row][col]-1]) {
-						$(_currentCell).addClass("wrong");
-					}
-					else visited[_playing[row][col]-1] = true;
-				}
-			};
-		},
 
-		checkCol: function (col) {
-			var visited = [false, false, false, false, false, false, false, false, false];
-			for (var row in _playing) {
-				if (_playing[row][col]) {
-					if (visited[_playing[row][col]-1]) {
-						$(_currentCell).addClass("wrong");
+			for (var col in _playing[r]) {
+				if (col != c) {
+					if (_playing[r][col]) {
+						if (!visited[_playing[r][col]-1]) visited[_playing[r][col]-1] = true;
 					}
-					else visited[_playing[row][col]-1] = true;
+				}
+			}
+
+			if (visited[_playing[r][c]-1]) {
+				var index = _controller.findIndexWrongArray(r,c);
+				if (index === -1) {
+					var cell = "#cell" + r + c;
+					$(cell).addClass("wrong");
+					_controller.addToWrongArray(r,c,"row");
+				}
+			}
+			else {
+				visited[_playing[r][c]-1] = true;
+				if (_wrongCellCheckingMode) {
+					var cell = "#cell" + r + c;
+					$(cell).removeClass("wrong");
+					_controller.removeFromWrongArray(r, c);
 				}
 			}
 		},
 
-		checkSquare: function (squareRow, squareCol) {
+		checkCol: function (r, c) {
 			var visited = [false, false, false, false, false, false, false, false, false];
+
+			for (var row in _playing) {
+				if (row != r) {
+					if (_playing[row][c]) {
+						if (!visited[_playing[row][c]-1]) visited[_playing[row][c]-1] = true;
+					}
+				}
+			}
+
+			if (visited[_playing[r][c]-1]) {
+				var index = _controller.findIndexWrongArray(r,c);
+				if (index === -1) {
+					var cell = "#cell" + r + c;
+					$(cell).addClass("wrong");
+					_controller.addToWrongArray(r,c,"col");
+				}
+			}
+			else {
+				visited[_playing[r][c]-1] = true;
+				if (_wrongCellCheckingMode) {
+					var cell = "#cell" + r + c;
+					$(cell).removeClass("wrong");
+					_controller.removeFromWrongArray(r, c);
+				}
+			}
+		},
+
+		checkSquare: function (r, c, squareRow, squareCol) {
+			var visited = [false, false, false, false, false, false, false, false, false];
+
 			for (var row = squareRow*3; row < squareRow*3+3; row++) {
 				for (var col = squareCol*3; col < squareCol*3+3; col++) {
-					if (_playing[row][col]) {
-						if (visited[_playing[row][col]-1]) {
-							$(_currentCell).addClass("wrong");
+					if (row != r && col != c) {
+						if (_playing[row][col]) {
+							if (!visited[_playing[row][col]-1]) visited[_playing[row][col]-1] = true;
 						}
-						else visited[_playing[row][col]-1] = true;
 					}
 				}
 			}
+
+			if (visited[_playing[r][c]-1]) {
+				var index = _controller.findIndexWrongArray(r,c);
+				if (index === -1) {
+					var cell = "#cell" + r + c;
+					$(cell).addClass("wrong");
+					_controller.addToWrongArray(r,c,"square");
+				}
+			}
+			else {
+				visited[_playing[r][c]-1] = true;
+				if (_wrongCellCheckingMode) {
+					var cell = "#cell" + r + c;
+					$(cell).removeClass("wrong");
+					_controller.removeFromWrongArray(r, c);
+				}
+			}
+		},
+
+		checkWrongArray: function () {
+			_wrongCellCheckingMode = true;
+
+			for (var i in _wrongCell) {
+				var row = _wrongCell[i].r;
+				var col = _wrongCell[i].c;
+				var type = _wrongCell[i].wrongType;
+
+				var squareRow = Math.floor(row/3);
+				var squareCol = Math.floor(col/3);
+
+				switch(type) {
+					case "row":
+						_validation.checkRow(row, col);
+						break;
+					case "col":
+						_validation.checkCol(row,col);
+						break;
+					case "square":
+						_validation.checkSquare(row, col, squareRow,squareCol);
+						break;
+				}
+			}
+
+			_wrongCellCheckingMode = false;
 		},
 
 		checkCompleted: function () {
@@ -256,7 +366,8 @@ var Sudoku = (function () {
 				}
 			}
 
-			if ($("#board").find(".wrong").length > 0) alert("Please fix wrong cells");
+			//if ($("#board").find(".wrong").length > 0) alert("Please fix wrong cells");
+			if (_wrongCell.length > 0) alert("Please fix wrong cells");
 			else alert("Congratulations! You solved this quiz");
 		}
 	};
