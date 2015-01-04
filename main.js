@@ -1,33 +1,34 @@
 
 var Sudoku = (function () {
 	var _board = [
-		[5,3,null,null,7,null,null,null,null],
-		[6,null,null,1,9,5,null,null,null],
-		[null,9,8,null,null,null,null,6,null],
-		[8,null,null,null,6,null,null,null,3],
-		[4,null,null,8,null,3,null,null,1],
-		[7,null,null,null,2,null,null,null,6],
-		[null,6,null,null,null,null,2,8,null],
-		[null,null,null,4,1,9,null,null,5],
-		[null,null,null,null,8,null,null,7,9]
-	];
+			[5,3,null,null,7,null,null,null,null],
+			[6,null,null,1,9,5,null,null,null],
+			[null,9,8,null,null,null,null,6,null],
+			[8,null,null,null,6,null,null,null,3],
+			[4,null,null,8,null,3,null,null,1],
+			[7,null,null,null,2,null,null,null,6],
+			[null,6,null,null,null,null,2,8,null],
+			[null,null,null,4,1,9,null,null,5],
+			[null,null,null,null,8,null,null,7,9]
+		],
 
-	var _playing = _board.map(function (arr) {
-		return arr.slice();
-	});
+		_playing = _board.map(function (arr) {
+			return arr.slice();
+		}),
 
-	var _currentCell = null;
-	var _currentRow = null;
-	var _currentCol = null;
+		_currentCell = null,
+		_currentRow = null,
+		_currentCol = null,
 
-	var _wrongCell = [];
-	var _wrongCellCheckingMode = false;
+		_wrongCell = [],
+		_wrongCellCheckingMode = false;
+
 
 	var _startGame = function () {
-		//this.view.render();
 		_view.render();
 		_controller.bindEvents();
 	};
+
 
 	var _view = {
 		render: function () {
@@ -69,6 +70,7 @@ var Sudoku = (function () {
 		reRender: function () {
 			$("#board a.board-cell").removeClass("selected");
 			$("#board a.board-cell").removeClass("wrong");
+
 			for (var row in _board) {
 				for (var col in _board[row]) {
 					if (!_board[row][col]) {
@@ -79,6 +81,7 @@ var Sudoku = (function () {
 			}
 		}
 	};
+
 
 	var _controller = {
 		bindEvents: function () {
@@ -100,6 +103,7 @@ var Sudoku = (function () {
 				_playing = _board.map(function (arr) {
 					return arr.slice();
 				});
+				_wrongCell = [];
 				_view.reRender();
 			});
 
@@ -108,81 +112,92 @@ var Sudoku = (function () {
 				if (_currentCell) {
 					$(_currentCell + " .cell-content-table-cell").html("");
 					_playing[_currentRow][_currentCol] = null;
+					//$(_currentCell).removeClass("wrong");
+					_controller.removeFromWrongArray(_currentRow, _currentCell);
 				}
 			});
 
 			//bind keyboard events to cells
 			$(document).keydown(function (e) {
-				//down arrow
-				if (e.which == "40") {
-					e.preventDefault();
-					if (_currentRow < _board.length-1) {
-						var row;
-						for (row = _currentRow*1+1; row < _board.length; row++) {
-							if (!_board[row][_currentCol]) {
-								_currentRow = row;
-								var moveId = "#cell" + _currentRow + _currentCol;
-								_controller.selectCell($(this).find(moveId));
-								break;
+				if (_currentCell) {
+					//down arrow
+					if (e.which == "40") {
+						e.preventDefault();
+						if (_currentRow < _board.length-1) {
+							var row;
+							for (row = _currentRow*1+1; row < _board.length; row++) {
+								if (!_board[row][_currentCol]) {
+									_currentRow = row;
+									var moveId = "#cell" + _currentRow + _currentCol;
+									_controller.selectCell($(this).find(moveId));
+									break;
+								}
 							}
 						}
 					}
-				}
 
-				//up arrow
-				if (e.which == "38") {
-					e.preventDefault();
-					if (_currentRow > 0) {
-						var row;
-						for (row = _currentRow-1; row >= 0; row--) {
-							if (!_board[row][_currentCol]) {
-								_currentRow = row;
-								var moveId = "#cell" + _currentRow + _currentCol;
-								_controller.selectCell($(this).find(moveId));
-								break;
+					//up arrow
+					if (e.which == "38") {
+						e.preventDefault();
+						if (_currentRow > 0) {
+							var row;
+							for (row = _currentRow-1; row >= 0; row--) {
+								if (!_board[row][_currentCol]) {
+									_currentRow = row;
+									var moveId = "#cell" + _currentRow + _currentCol;
+									_controller.selectCell($(this).find(moveId));
+									break;
+								}
 							}
 						}
 					}
-				}
 
-				//left arrow
-				if (e.which == "37") {
-					e.preventDefault();
-					if (_currentCol > 0) {
-						for (col = _currentCol-1; col >= 0; col--) {
-							if (!_board[_currentRow][col]) {
-								_currentCol = col;
-								var moveId = "#cell" + _currentRow + _currentCol;
-								_controller.selectCell($(this).find(moveId));
-								break;
+					//left arrow
+					if (e.which == "37") {
+						e.preventDefault();
+						if (_currentCol > 0) {
+							for (col = _currentCol-1; col >= 0; col--) {
+								if (!_board[_currentRow][col]) {
+									_currentCol = col;
+									var moveId = "#cell" + _currentRow + _currentCol;
+									_controller.selectCell($(this).find(moveId));
+									break;
+								}
 							}
 						}
 					}
-				}
 
-				//right arrow
-				if (e.which == "39") {
-					e.preventDefault();
-					if (_currentCol < _board.length-1) {
-						var col;
-						for (col = _currentCol*1+1; col < _board[_currentRow].length; col++) {
-							if (!_board[_currentRow][col]) {
-								_currentCol = col;
-								var moveId = "#cell" + _currentRow + _currentCol;
-								_controller.selectCell($(this).find(moveId));
-								break;
+					//right arrow
+					if (e.which == "39") {
+						e.preventDefault();
+						if (_currentCol < _board.length-1) {
+							var col;
+							for (col = _currentCol*1+1; col < _board[_currentRow].length; col++) {
+								if (!_board[_currentRow][col]) {
+									_currentCol = col;
+									var moveId = "#cell" + _currentRow + _currentCol;
+									_controller.selectCell($(this).find(moveId));
+									break;
+								}
 							}
 						}
 					}
-				}
 
-				//number
-				if ((e.which >= 49 && e.which <= 57) || (e.which >= 97 && e.which <= 105)) {
-					var number;// = e.which-48;
-					if (e.which <= 57) number = e.which-48;
-					else number = e.which-96;
-					_controller.selectNumber($(this).find("#" + number));
+					//backspace
+					if (e.which == "8") {
+						e.preventDefault();
+						$("#eraseBtn").click();
+					}
+
+					//number
+					if ((e.which >= 49 && e.which <= 57) || (e.which >= 97 && e.which <= 105)) {
+						var number;
+						if (e.which <= 57) number = e.which-48;
+						else number = e.which-96;
+						_controller.selectNumber($(this).find("#" + number));
+					}
 				}
+				else alert("Please select a cell first!");
 			});
 		},
 
@@ -195,7 +210,6 @@ var Sudoku = (function () {
 		},
 
 		selectNumber: function (element) {
-			$(_currentCell).removeClass("wrong");
 			_controller.removeFromWrongArray(_currentRow, _currentCol);
 			$(_currentCell + " .cell-content-table-cell").html(element.attr("id"));
 			_playing[_currentRow][_currentCol] = parseInt(element.attr("id"));
@@ -216,6 +230,9 @@ var Sudoku = (function () {
 		addToWrongArray: function (row, col, type) {
 			var index = _controller.findIndexWrongArray(row,col);
 			if (index === -1) {
+				var cell = "#cell" + row + col;
+				$(cell).addClass("wrong");
+
 				var object = {'r': row, 'c': col, 'wrongType': type};
 				_wrongCell.push(object);
 			}
@@ -224,16 +241,17 @@ var Sudoku = (function () {
 		removeFromWrongArray: function (row, col) {
 			var index = _controller.findIndexWrongArray(row,col);
 			if (index !== -1) {
+				var cell = "#cell" + row + col;
+				$(cell).removeClass("wrong");
+
 				_wrongCell.splice(index,1);
 			}
 		}
 	};
 
+
 	var _validation = {
 		validate: function (row, col) {
-			// var squareRow = Math.floor(row/3);
-			// var squareCol = Math.floor(col/3);
-
 			_validation.checkRow(row, col);
 			_validation.checkCol(row, col);
 			_validation.checkSquare(row, col);
@@ -255,16 +273,12 @@ var Sudoku = (function () {
 			if (visited[_playing[r][c]-1]) {
 				var index = _controller.findIndexWrongArray(r,c);
 				if (index === -1) {
-					var cell = "#cell" + r + c;
-					$(cell).addClass("wrong");
 					_controller.addToWrongArray(r,c,"row");
 				}
 			}
 			else {
 				visited[_playing[r][c]-1] = true;
 				if (_wrongCellCheckingMode) {
-					var cell = "#cell" + r + c;
-					$(cell).removeClass("wrong");
 					_controller.removeFromWrongArray(r, c);
 
 					_wrongCellCheckingMode = false;
@@ -288,16 +302,12 @@ var Sudoku = (function () {
 			if (visited[_playing[r][c]-1]) {
 				var index = _controller.findIndexWrongArray(r,c);
 				if (index === -1) {
-					var cell = "#cell" + r + c;
-					$(cell).addClass("wrong");
 					_controller.addToWrongArray(r,c,"col");
 				}
 			}
 			else {
 				visited[_playing[r][c]-1] = true;
 				if (_wrongCellCheckingMode) {
-					var cell = "#cell" + r + c;
-					$(cell).removeClass("wrong");
 					_controller.removeFromWrongArray(r, c);
 
 					_wrongCellCheckingMode = false;
@@ -326,16 +336,12 @@ var Sudoku = (function () {
 			if (visited[_playing[r][c]-1]) {
 				var index = _controller.findIndexWrongArray(r,c);
 				if (index === -1) {
-					var cell = "#cell" + r + c;
-					$(cell).addClass("wrong");
 					_controller.addToWrongArray(r,c,"square");
 				}
 			}
 			else {
 				visited[_playing[r][c]-1] = true;
 				if (_wrongCellCheckingMode) {
-					var cell = "#cell" + r + c;
-					$(cell).removeClass("wrong");
 					_controller.removeFromWrongArray(r, c);
 
 					_wrongCellCheckingMode = false;
@@ -352,9 +358,6 @@ var Sudoku = (function () {
 				var row = _wrongCell[i].r;
 				var col = _wrongCell[i].c;
 				var type = _wrongCell[i].wrongType;
-
-				// var squareRow = Math.floor(row/3);
-				// var squareCol = Math.floor(col/3);
 
 				switch(type) {
 					case "row":
@@ -386,21 +389,12 @@ var Sudoku = (function () {
 		}
 	};
 
+
 	return {
 		startGame: _startGame
 	}
 })();
 
-// var solution = [
-// 	[5,3,4,6,7,8,9,1,2],
-// 	[6,7,2,1,9,5,3,4,8],
-// 	[1,9,8,3,4,2,5,6,7],
-// 	[8,5,9,7,6,1,4,2,3],
-// 	[4,2,6,8,5,3,7,9,1],
-// 	[7,1,3,9,2,4,8,5,6],
-// 	[9,6,1,5,3,7,2,8,4],
-// 	[2,8,7,4,1,9,6,3,5],
-// 	[3,4,5,2,8,6,1,7,9]];
 
 
 $(function () {
