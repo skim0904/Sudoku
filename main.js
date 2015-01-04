@@ -231,12 +231,12 @@ var Sudoku = (function () {
 
 	var _validation = {
 		validate: function (row, col) {
-			var squareRow = Math.floor(row/3);
-			var squareCol = Math.floor(col/3);
+			// var squareRow = Math.floor(row/3);
+			// var squareCol = Math.floor(col/3);
 
 			_validation.checkRow(row, col);
 			_validation.checkCol(row, col);
-			_validation.checkSquare(row, col, squareRow, squareCol);
+			_validation.checkSquare(row, col);
 			_validation.checkWrongArray();
 			_validation.checkCompleted();
 		},
@@ -266,6 +266,10 @@ var Sudoku = (function () {
 					var cell = "#cell" + r + c;
 					$(cell).removeClass("wrong");
 					_controller.removeFromWrongArray(r, c);
+
+					_wrongCellCheckingMode = false;
+					_validation.checkCol(r, c);
+					_validation.checkSquare(r, c);
 				}
 			}
 		},
@@ -295,11 +299,18 @@ var Sudoku = (function () {
 					var cell = "#cell" + r + c;
 					$(cell).removeClass("wrong");
 					_controller.removeFromWrongArray(r, c);
+
+					_wrongCellCheckingMode = false;
+					_validation.checkRow(r, c);
+					_validation.checkSquare(r, c);
 				}
 			}
 		},
 
-		checkSquare: function (r, c, squareRow, squareCol) {
+		checkSquare: function (r, c) {
+			var squareRow = Math.floor(r/3);
+			var squareCol = Math.floor(c/3);
+
 			var visited = [false, false, false, false, false, false, false, false, false];
 
 			for (var row = squareRow*3; row < squareRow*3+3; row++) {
@@ -326,6 +337,10 @@ var Sudoku = (function () {
 					var cell = "#cell" + r + c;
 					$(cell).removeClass("wrong");
 					_controller.removeFromWrongArray(r, c);
+
+					_wrongCellCheckingMode = false;
+					_validation.checkRow(r, c);
+					_validation.checkCol(r, c);
 				}
 			}
 		},
@@ -338,8 +353,8 @@ var Sudoku = (function () {
 				var col = _wrongCell[i].c;
 				var type = _wrongCell[i].wrongType;
 
-				var squareRow = Math.floor(row/3);
-				var squareCol = Math.floor(col/3);
+				// var squareRow = Math.floor(row/3);
+				// var squareCol = Math.floor(col/3);
 
 				switch(type) {
 					case "row":
@@ -349,7 +364,7 @@ var Sudoku = (function () {
 						_validation.checkCol(row,col);
 						break;
 					case "square":
-						_validation.checkSquare(row, col, squareRow,squareCol);
+						_validation.checkSquare(row, col);
 						break;
 				}
 			}
@@ -366,7 +381,6 @@ var Sudoku = (function () {
 				}
 			}
 
-			//if ($("#board").find(".wrong").length > 0) alert("Please fix wrong cells");
 			if (_wrongCell.length > 0) alert("Please fix wrong cells");
 			else alert("Congratulations! You solved this quiz");
 		}
