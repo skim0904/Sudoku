@@ -24,7 +24,7 @@ var Sudoku = (function () {
 		_wrongCellCheckingMode = false;
 
 
-	var _startGame = function () {
+	var startGame = function () {
 		_view.render();
 		_controller.bindEvents();
 	};
@@ -112,7 +112,6 @@ var Sudoku = (function () {
 				if (_currentCell) {
 					$(_currentCell + " .cell-content-table-cell").html("");
 					_playing[_currentRow][_currentCol] = null;
-					//$(_currentCell).removeClass("wrong");
 					_controller.removeFromWrongArray(_currentRow, _currentCell);
 					_validation.checkWrongArray();
 				}
@@ -392,7 +391,7 @@ var Sudoku = (function () {
 
 
 	return {
-		startGame: _startGame
+		startGame: startGame
 	}
 })();
 

@@ -29,13 +29,9 @@
 }
 
 body {
-	/*width: 100%;*/
-	/*width: 30%;*/
 	color: black;
-	text-align: center;
 	font-family: monospace;
-	/*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
-
+	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -67,19 +63,12 @@ a.num:hover {
 }
 
 .board-container {
-	/*margin-left: auto;
-	margin-right: auto;*/
-
-	/*padding: 1.5% 0;*/
 	padding-bottom: 5vh;
-	/*width: 30%;*/
 	width: 100%;
-	/*font-size: 2vw;*/
 	font-weight: bold;
 }
 
 .board {
-	/*display: inline-block;*/
 	width: 100%;
 	border: 1px solid black;
 	display: table;
@@ -91,18 +80,15 @@ a.num:hover {
 
 .board .board-row {
 	clear: both;
-	/*float: left;*/
 	width: 100%;
 	display: table-row;
 }
 
 .board .board-row .board-cell {
-	/*float: left;*/
 	position: relative;
 	width: 10%;
 	padding-bottom: 10%;
 	border: 1px solid black;
-	/*text-align: center;*/
 	display: table-cell;
 }
 
@@ -144,11 +130,7 @@ a.num:hover {
 }
 
 .button-group {
-	/*margin-left: auto;
-	margin-right: auto;*/
-	/*width: 30%;*/
 	width: 100%;
-	/*height: 5vh;*/
 	display: table;
 }
 
@@ -160,7 +142,6 @@ a.num:hover {
 .button-group .button-cell .button {
 	width: 60%;
 	background-color: #E85A5A;
-	/*border: 1px solid black;*/
 	border-radius: 4px;
 	padding: 10px;
 	margin: 0 auto;
@@ -172,9 +153,3 @@ a.num:hover {
 	color: #fff;
 	display: block;
 }
-
-
-
-
-
-
