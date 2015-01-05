@@ -2,8 +2,10 @@ Sudoku for code challenge
 ======
 
 This is a Sudoku app to solve the puzzle.
+
 To play this Sudoku, visit [http://kim-sudoku.herokuapp.com/](http://kim-sudoku.herokuapp.com/)
-On a device with keyboard hardware you can also use number keys, backspace key, and 4-direction array keys
+
+On a device with keyboard hardware you can also use number keys, backspace key, and 4-direction arrow keys
 
 ###1. Structure of the application
   - Home.html: the HTML page that has elements to be displayed, including template scripts.
