@@ -114,6 +114,7 @@ var Sudoku = (function () {
 					_playing[_currentRow][_currentCol] = null;
 					//$(_currentCell).removeClass("wrong");
 					_controller.removeFromWrongArray(_currentRow, _currentCell);
+					_validation.checkWrongArray();
 				}
 			});
 
