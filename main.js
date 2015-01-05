@@ -137,7 +137,7 @@ var Sudoku = (function () {
 					}
 
 					//up arrow
-					if (e.which == "38") {
+					else if (e.which == "38") {
 						e.preventDefault();
 						if (_currentRow > 0) {
 							var row;
@@ -153,7 +153,7 @@ var Sudoku = (function () {
 					}
 
 					//left arrow
-					if (e.which == "37") {
+					else if (e.which == "37") {
 						e.preventDefault();
 						if (_currentCol > 0) {
 							for (col = _currentCol-1; col >= 0; col--) {
@@ -168,7 +168,7 @@ var Sudoku = (function () {
 					}
 
 					//right arrow
-					if (e.which == "39") {
+					else if (e.which == "39") {
 						e.preventDefault();
 						if (_currentCol < _board.length-1) {
 							var col;
@@ -184,13 +184,13 @@ var Sudoku = (function () {
 					}
 
 					//backspace
-					if (e.which == "8") {
+					else if (e.which == "8") {
 						e.preventDefault();
 						$("#eraseBtn").click();
 					}
 
 					//number
-					if ((e.which >= 49 && e.which <= 57) || (e.which >= 97 && e.which <= 105)) {
+					else if ((e.which >= 49 && e.which <= 57) || (e.which >= 97 && e.which <= 105)) {
 						var number;
 						if (e.which <= 57) number = e.which-48;
 						else number = e.which-96;
